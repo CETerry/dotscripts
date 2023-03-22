@@ -1,0 +1,45 @@
+#!/bin/bash
+
+if [[ -e $@ ]]; then
+	echo "This directory already exits. Do you want to overwrite it (y/n)?"
+	read ans
+
+	if [[ $ans == "y" || $ans == "yes" ]]; then
+		echo "Okay... removing!"
+		rm -rf $@
+		mkdir $@
+
+	elif [[ $ans == "n" || $ans == "no" ]]; then
+		exit
+	else
+		exit
+	fi
+
+elif [[ -z $@ ]]; then
+	echo "makeflash missing operand"
+	exit
+
+else
+	mkdir $@
+fi
+
+cd $@
+
+python3 -m venv env
+source env/bin/active
+pip install Flask
+pip install requests
+mkdir templates
+makehtml templates/index
+mkdir static
+touch appclient.py
+
+cat > app.py
+#!/usr/bin/env Python3
+from flask import Flask, render_template
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+	return render_template('index.html)
+done
